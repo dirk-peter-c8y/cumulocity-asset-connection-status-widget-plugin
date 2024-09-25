@@ -1,6 +1,6 @@
 {
   "name": "cumulocity-asset-connection-status-widget-plugin",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "scripts": {
     "start": "ng serve -u https://psfactory.eu-latest.cumulocity.com",
