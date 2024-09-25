@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-// import { IManagedObject } from '@c8y/client';
-// import { ManagedObjectRealtimeService } from '@c8y/ngx-components';
+import { IManagedObject, InventoryService } from '@c8y/client';
+import { ManagedObjectRealtimeService } from '@c8y/ngx-components';
 import { Subscription } from 'rxjs';
 import { AssetConnectionStatusWidgetConfig } from '../../models/asset-connection-status-widget.model';
 
@@ -14,20 +14,23 @@ export class AssetConnectionStatusWidget implements OnInit, OnDestroy {
 
   lastUpdated: string;
   loading = true;
+  asset?: IManagedObject;
+  isDev = false;
 
   private subscription: Subscription;
-  // private isDev = false;
 
   constructor(
-    // private managedObjectRealtimeService: ManagedObjectRealtimeService
+    private inventoryService: InventoryService,
+    private managedObjectRealtimeService: ManagedObjectRealtimeService
   ) {
-    // this.isDev = window.location.search.indexOf('dev=true') >= 0;
+    this.isDev = window.location.search.indexOf('dev=true') >= 0;
   }
 
   async ngOnInit(): Promise<void> {
     this.loading = true;
 
-    // this.setupManagedObjectSubscription();
+    await this.fetchAsset();
+    this.setupManagedObjectSubscription();
 
     this.loading = false;
   }
@@ -36,14 +39,23 @@ export class AssetConnectionStatusWidget implements OnInit, OnDestroy {
     if (this.subscription) this.subscription.unsubscribe();
   }
 
-  // private setupManagedObjectSubscription() {
-  //   this.subscription = this.managedObjectRealtimeService
-  //     .onUpdate$(this.config.device.id)
-  //     .subscribe((mo) => this.handleManagedObjectUpdate(mo));
-  // }
+  private setupManagedObjectSubscription() {
+    this.subscription = this.managedObjectRealtimeService
+      .onUpdate$(this.config.device.id)
+      .subscribe((mo) => this.handleManagedObjectUpdate(mo));
+  }
 
-  // private handleManagedObjectUpdate(mo: IManagedObject): void {
-  //   if (this.isDev) console.log('[ACSW.C] MO', mo);
-  //   console.log('[ACSW.C] MO', mo);
-  // }
+  private async fetchAsset(): Promise<void> {
+    const response = await this.inventoryService.detail(this.config.device.id);
+
+    this.handleManagedObjectUpdate(response.data);
+  }
+
+  private handleManagedObjectUpdate(mo: IManagedObject): void {
+    if (this.isDev) console.log('[ACSW.C] MO', mo);
+
+    if (!mo) return;
+
+    this.asset = mo;
+  }
 }

@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CoreModule, FormsModule, hookComponent } from '@c8y/ngx-components';
+import {
+  CoreModule,
+  FormsModule,
+  ManagedObjectRealtimeService,
+  hookComponent,
+} from '@c8y/ngx-components';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { AssetConnectionStatusWidget } from './components/asset-connection-status-widget/asset-connection-status-widget.component';
 
@@ -9,7 +14,7 @@ import { AssetConnectionStatusWidget } from './components/asset-connection-statu
   imports: [CommonModule, CoreModule, RouterModule, FormsModule, TooltipModule],
   declarations: [AssetConnectionStatusWidget],
   providers: [
-    // ManagedObjectRealtimeService,
+    ManagedObjectRealtimeService,
     hookComponent({
       id: 'asset-connection-status.widget',
       label: 'AssetConnectionStatusWidgetModule',

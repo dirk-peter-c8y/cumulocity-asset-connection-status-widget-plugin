@@ -12,7 +12,7 @@ export default {
     dynamicOptionsUrl: true,
     remotes: {
       // 'plugin name from package.json': [ PluginModule ]
-      'c8y-asset-connection-status-widget-plugin': [
+      'cumulocity-asset-connection-status-widget-plugin': [
         'AssetConnectionStatusWidgetModule',
       ],
     },
