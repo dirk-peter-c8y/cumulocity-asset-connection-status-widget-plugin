@@ -1,0 +1,1 @@
+# cumulocity-asset-connection-status-widget-plugin
