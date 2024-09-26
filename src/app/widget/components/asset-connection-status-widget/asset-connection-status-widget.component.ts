@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { IManagedObject, InventoryService } from '@c8y/client';
 import { ManagedObjectRealtimeService } from '@c8y/ngx-components';
 import { Subscription } from 'rxjs';
-import { AssetConnectionStatusWidgetConfig } from '../../models/asset-connection-status-widget.model';
+import { AssetConnectionStatusWidgetConfiguration } from '../../models/asset-connection-status-widget.model';
 
 @Component({
   selector: 'c8y-asset-connection-status-widget',
@@ -10,7 +10,7 @@ import { AssetConnectionStatusWidgetConfig } from '../../models/asset-connection
   styleUrl: './asset-connection-status-widget.component.scss',
 })
 export class AssetConnectionStatusWidget implements OnInit, OnDestroy {
-  @Input() config: AssetConnectionStatusWidgetConfig;
+  @Input() config: AssetConnectionStatusWidgetConfiguration;
 
   lastUpdated: string;
   loading = true;
@@ -27,6 +27,7 @@ export class AssetConnectionStatusWidget implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
+    if (this.isDev) console.log('ngOnInit', this.config);
     this.loading = true;
 
     await this.fetchAsset();
@@ -55,6 +56,17 @@ export class AssetConnectionStatusWidget implements OnInit, OnDestroy {
     if (this.isDev) console.log('[ACSW.C] MO', mo);
 
     if (!mo) return;
+
+    const lastMessage =
+      mo.c8y_Availability?.lastMessage || new Date().toISOString();
+    if (this.config.forcedAvailability) {
+      mo.c8y_Availability = {
+        status: this.config.forcedAvailability,
+        lastMessage,
+      };
+    }
+    if (this.config.forcedConnection)
+      mo.c8y_Connection = { status: this.config.forcedConnection };
 
     this.asset = mo;
   }
