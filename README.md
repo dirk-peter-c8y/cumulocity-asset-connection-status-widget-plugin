@@ -1,5 +1,7 @@
 # Cumulocity Asset Connection Status Widget Plugin
 
+![](./src/app/widget/assets/preview.png)
+
 ---
 
 ## Useful links
